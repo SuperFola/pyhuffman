@@ -2,7 +2,7 @@
 
 import sys
 
-from . import coding, decode, encode, tree
+from . import coding, decode, encode, tree, encode_as_bytes, decode_from_bytes
 
 
 def main(display_tree: bool, display_code:bool, encode_decode: bool, *args):
@@ -20,6 +20,10 @@ def main(display_tree: bool, display_code:bool, encode_decode: bool, *args):
         print(f"Encoded text: '{e}', numbers of bits needed: {len(e)}")
         d = decode(e, out)
         print(f"Decoded text: '{d}'")
+
+        eb = encode_as_bytes(text, out)
+        db = decode_from_bytes(eb, out)
+        print(eb, db)
 
 
 if __name__ == "__main__":
