@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
 
+__all__ = [
+    'Node',
+    'Tree',
+    'from_string',
+]
+
 
 def min_weight(nodes):
     """
@@ -14,12 +20,14 @@ class Node:
     def __init__(self, char: str, w: int):
         self.char = char
         self.w = w
+        self.depth = 1
+        self.bit = None
 
     def repr(self, i: int = 0):
         return " " * 4 * i + self.__repr__()
 
     def __repr__(self) -> str:
-        return f"('{self.char}', {self.w})"
+        return f"<{self.bit}>('{self.char}', {self.w})"
 
 
 class Tree:
@@ -45,15 +53,39 @@ class Tree:
 
     def __init__(self, left, right):
         self.left = left
+        self.left.bit = '0'
         self.right = right
+        self.right.bit = '1'
+        self.bit = None
+
+    def bits_to_list(self):
+        bits = []
+        if self.bit is not None:
+            bits.append(self.bit)
+
+        if isinstance(self.left, Tree):
+            bits.append(self.left.bits_to_list())
+        else:
+            bits.append([self.left])
+
+        if isinstance(self.right, Tree):
+            bits.append(self.right.bits_to_list())
+        else:
+            bits.append([self.right])
+
+        return bits
 
     @property
     def w(self):
         return self.left.w + self.right.w
 
+    @property
+    def depth(self):
+        return 1 + max(self.left.depth, self.right.depth)
+
     def repr(self, i: int = 0) -> str:
         pad = " " * 4 * i
-        out = pad + f"Tree<{self.w}>(\n"
+        out = pad + f"Tree<{self.w}, {self.bit}>(\n"
         out += self.left.repr(i + 1)
         out += ",\n"
         out += self.right.repr(i + 1)
