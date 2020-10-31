@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 
+
 def min_weight(nodes):
+    """
+    Return the minimum weight of a list of nodes / trees
+    """
     if len(nodes) < 2:
         return nodes[0].w
     return min(*nodes, key=lambda n: n.w).w
@@ -20,7 +24,7 @@ class Node:
 
 class Tree:
     @staticmethod
-    def from_list(data: list):
+    def from_sorted_list(data: list):
         if len(data) == 2:
             return Tree(*data)
 
@@ -37,7 +41,7 @@ class Tree:
             min_w = min_weight(data)
 
         data = sorted(data + trees, key=lambda n: n.w)
-        return Tree.from_list(data)
+        return Tree.from_sorted_list(data)
 
     def __init__(self, left, right):
         self.left = left
@@ -58,3 +62,22 @@ class Tree:
 
     def __repr__(self) -> str:
         return self.repr()
+
+
+def from_string(buffer: str) -> Tree:
+    """
+    Create a Huffman tree from a given buffer
+    """
+    occurences = {}
+    for e in buffer:
+        if e not in occurences:
+            occurences[e] = 1
+        else:
+            occurences[e] += 1
+
+    occurences = sorted(
+        list(Node(c, w) for c, w in occurences.items()),
+        key=lambda n: n.w
+    )
+
+    return Tree.from_sorted_list(occurences)

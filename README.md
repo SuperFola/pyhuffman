@@ -1,6 +1,6 @@
 # Huffman
 
-Implementing the Huffman coding in Python
+Implementing the Huffman coding in Python.
 
 ## Running it
 
