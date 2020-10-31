@@ -16,6 +16,19 @@ def min_weight(nodes):
     return min(*nodes, key=lambda n: n.w).w
 
 
+def put_prefix(nested, prefix: str = None) -> list:
+    if len(nested) > 1:
+        first = nested[0]
+        begin = prefix + first if prefix is not None else first
+
+        a = put_prefix(nested[1], begin)
+        b = put_prefix(nested[2], begin)
+        return [a, b]
+    else:
+        nested[0].bit = prefix + nested[0].bit
+        return nested[0]
+
+
 class Node:
     def __init__(self, char: str, w: int):
         self.char = char
@@ -54,26 +67,43 @@ class Tree:
     def __init__(self, left, right):
         self.left = left
         self.left.bit = '0'
+
         self.right = right
         self.right.bit = '1'
+
         self.bit = None
 
-    def bits_to_list(self):
+        self._codes = None
+
+    def _bits_to_list(self):
         bits = []
         if self.bit is not None:
             bits.append(self.bit)
 
         if isinstance(self.left, Tree):
-            bits.append(self.left.bits_to_list())
+            bits.append(self.left._bits_to_list())
         else:
             bits.append([self.left])
 
         if isinstance(self.right, Tree):
-            bits.append(self.right.bits_to_list())
+            bits.append(self.right._bits_to_list())
         else:
             bits.append([self.right])
 
         return bits
+
+    def generate_prefixes(self):
+        """
+        Generate the prefixes for each nodes of the tree
+        """
+        if self._codes is not None:
+            return self._codes
+
+        self._codes = self._bits_to_list()
+        self._codes[0] = put_prefix(self._codes[0])
+        self._codes[1] = put_prefix(self._codes[1])
+
+        return self._codes
 
     @property
     def w(self):
