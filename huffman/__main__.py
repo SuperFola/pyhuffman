@@ -16,14 +16,15 @@ def main(display_tree: bool, display_code:bool, encode_decode: bool, *args):
         print(coding.generate(out))
     if encode_decode:
         print(f"Base text: '{text}', number of bits needed: {len(text) * 8}")
-        e = encode(text, out)
+        e = encode(text, coding.generate(out))
         print(f"Encoded text: '{e}', numbers of bits needed: {len(e)}")
-        d = decode(e, out)
+        d = decode(e, coding.generate(out))
         print(f"Decoded text: '{d}'")
 
-        eb = encode_as_bytes(text, out)
-        db = decode_from_bytes(eb, out)
-        print(eb, db)
+        eb = encode_as_bytes(text, coding.generate(out))
+        print(eb)
+        db = decode_from_bytes(eb, coding.generate(out))
+        print(db)
 
 
 if __name__ == "__main__":
